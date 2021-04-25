@@ -141,19 +141,19 @@ export default defineComponent({
 
 - 第一步：还是跟往常一样，在 html 中写入 ref 的名称
 
-![img](D:\笔记\Vue 3.0 实战项目\media\v2-ca53f5add66ca3cdb489f4ea8ec01806_720w.jpg) 
+![img](media\v2-ca53f5add66ca3cdb489f4ea8ec01806_720w.jpg) 
 
 - 第二步：在 setup 中直接声明该变量————我是 TypeScript 所以还有引入类型
 
-![img](D:\笔记\Vue 3.0 实战项目\media\v2-77c2f1243e723c154888a77849e469d9_720w.jpg) 
+![img](media\v2-77c2f1243e723c154888a77849e469d9_720w.jpg) 
 
 第三步：别忘了 retrun 该数据
 
-![img](D:\笔记\Vue 3.0 实战项目\media\v2-81cb008d1ec1a606c6530e91fad0dfb2_720w.jpg) 
+![img](media\v2-81cb008d1ec1a606c6530e91fad0dfb2_720w.jpg) 
 
 第四步：然后就可以直接使用它了，通过 .value 访问到数据
 
-![img](D:\笔记\Vue 3.0 实战项目\media\v2-b7a06a716deabbc32f1c6a871385b3c0_720w.jpg) 
+![img](media\v2-b7a06a716deabbc32f1c6a871385b3c0_720w.jpg) 
 
 ### 获取当前组件的实例getCurrentInstance
 
@@ -195,7 +195,7 @@ export default {
 
 用getCurrentInstance获取的组件实例的属性如下：
 
-![image-20210423164216836](D:\笔记\Vue 3.0 实战项目\media\image-20210423164216836.png) 
+![image-20210423164216836](media\image-20210423164216836.png) 
 
 ### ctx
 
@@ -552,7 +552,7 @@ export default {
 我们可以简单地把 `ref(obj)` 理解为这个样子 `reactive({value: obj})`
 
 ```
-<script>
+![image-20210423164216836](media/image-20210423164216836.png)<script>
 import {ref, reactive} from 'vue'
 export default {
   name: 'App',
@@ -569,7 +569,7 @@ export default {
 </script>
 ```
 
-![在这里插入图片描述](D:\笔记\Vue 3.0 实战项目\media\1460000038236427) 
+![](media/image-20210423164216836.png) 
 
 **注意**：数组的取值同样如此
 
