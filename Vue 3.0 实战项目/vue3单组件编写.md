@@ -608,7 +608,7 @@ export default {
 </script>
 ```
 
-**总结：**
+**总结： ** **对于对象的单个属性**
 
 1. `ref` 是对传入数据的拷贝；`toRef` 是对传入数据的引用
 2. `ref` 的值改变会更新视图；`toRef` 的值改变不会更新视图
@@ -616,3 +616,356 @@ export default {
 ## toRefs
 
 其作用就是将传入的对象里所有的属性的值都转化为响应式数据对象，该函数支持一个参数，即 `obj` 对象
+
+## shallowReactive
+
+```vue
+<template>
+    <p>{{ state.a }}</p>
+    <p>{{ state.first.b }}</p>
+    <p>{{ state.first.second.c }}</p>
+    <button @click="change1">改变1</button>
+    <button @click="change2">改变2</button>
+</template>
+<script>
+import {shallowReactive} from 'vue'
+export default {
+    setup() {
+        const obj = {
+          a: 1,
+          first: {
+            b: 2,
+            second: {
+              c: 3
+            }
+          }
+        }
+        
+        const state = shallowReactive(obj)
+        
+        function change1() {
+          state.a = 7
+        }
+
+        function change2() {
+          state.first.b = 8
+          state.first.second.c = 9
+          console.log(state);
+        }
+
+        return {state}
+    }
+}
+</script>
+```
+
+`shallowReactive` 监听了第一层属性的值，一旦发生改变，则更新视图
+
+## shallowRef
+
+这是一个浅层的 `ref`，与 `shallowReactive` 一样是拿来做性能优化的
+
+`shallowReactive` 是监听对象第一层的数据变化用于驱动视图更新，那么 `shallowRef` 则是监听 `.value` 的值的变化来更新视图的
+
+## toRaw
+
+`toRaw` 方法是用于获取 `ref` 或 `reactive` 对象的原始数据的
+
+![在这里插入图片描述](media/1460000038236438) 
+
+**我们改变了 `reactive` 对象中的数据，于是看到原始数据 `obj` 和被 `reactive` 包装过的对象的值都发生了变化，由此我们可以看出，这两者是一个引用关系**
+
+**那么此时我们就想了，那如果直接改变原始数据 `obj` 的值，会怎么样呢？答案是： `reactive` 的值也会跟着改变，但是视图不会更新。**
+
+
+
+当我们想修改数据，但不想让视图更新时，可以选择直接修改原始数据上的值，因此需要先获取到原始数据，我们可以使用 Vue3 提供的 `toRaw` 方法
+
+`toRaw` 接收一个参数，即 `ref` 对象或 `reactive` 对象
+
+```
+<script>
+import {reactive, toRaw} from 'vue'
+export default {
+    setup() {
+        const obj = {
+          name: '前端印象',
+          age: 22
+        }
+
+        const state = reactive(obj)    
+        const raw = toRaw(state)
+
+        console.log(obj === raw)   // true
+    }
+}
+</script>
+```
+
+上述代码就证明了 `toRaw` 方法从 `reactive` 对象中获取到的是原始数据，因此我们就可以很方便的通过修改原始数据的值而不更新视图来做一些性能优化了
+
+> **注意：** 补充一句，当 `toRaw` 方法接收的参数是 `ref` 对象时，需要加上 `.value` 才能获取到原始数据对象
+
+
+
+# 总结
+
+**对于对象的单个属性**
+
+1. `ref` 是对传入数据的拷贝；`toRef` 是对传入数据的引用
+2. `ref` 的值改变会更新视图；`toRef` 的值改变不会更新视图
+
+对于对象本身
+
+**我们改变了 `reactive` 对象中的数据，于是看到原始数据 `obj` 和被 `reactive` 包装过的对象的值都发生了变化，由此我们可以看出，这两者是一个引用关系**
+
+**那么此时我们就想了，那如果直接改变原始数据 `obj` 的值，会怎么样呢？答案是： `reactive` 的值也会跟着改变，但是视图不会更新。**ref同理。
+
+
+
+## markRaw
+
+`markRaw` 方法可以将原始数据标记为非响应式的，即使用 `ref` 或 `reactive` 将其包装，扔无法实现数据响应式，其接收一个参数，即原始数据，并返回被标记后的数据
+
+```vue
+<template>
+    <p>{{ state.name }}</p>
+    <p>{{ state.age }}</p>
+    <button @click="change">改变</button>
+</template>
+
+<script>
+import {reactive, markRaw} from 'vue'
+export default {
+    setup() {
+        const obj = {
+          name: '前端印象',
+          age: 22
+        }
+        // 通过markRaw标记原始数据obj, 使其数据更新不再被追踪
+        const raw = markRaw(obj)   
+        // 试图用reactive包装raw, 使其变成响应式数据
+        const state = reactive(raw)    
+
+        function change() {
+          state.age = 90
+          console.log(state);
+        }
+
+        return {state, change}
+    }
+```
+
+## provide && inject
+
+- **provide** ：向子组件以及子孙组件传递数据。接收两个参数，第一个参数是 `key`，即数据的名称；第二个参数为 `value`，即数据的值
+- **inject** ：接收父组件或祖先组件传递过来的数据。接收一个参数 `key`，即父组件或祖先组件传递的数据名称
+
+```vue
+// A.vue
+<script>
+import {provide} from 'vue'
+export default {
+    setup() {
+        const obj= {
+          name: '前端印象',
+          age: 22
+        }
+
+        // 向子组件以及子孙组件传递名为info的数据
+        provide('info', obj)
+    }
+}
+</script>
+
+// B.vue
+<script>
+import {inject} from 'vue'
+export default {
+    setup() {    
+        // 接收A.vue传递过来的数据
+        inject('info')  // {name: '前端印象', age: 22}
+    }
+}
+</script>
+
+// C.vue
+<script>
+import {inject} from 'vue'
+export default {
+    setup() {    
+        // 接收A.vue传递过来的数据
+        inject('info')  // {name: '前端印象', age: 22}
+    }
+}
+</script>
+```
+
+## watch && watchEffect
+
+**watch**：watch( source, cb, [options] )
+
+参数说明：
+
+- source：可以是表达式或函数，用于指定监听的依赖对象
+- cb：依赖对象变化后执行的回掉函数
+- options：可参数，可以配置的属性有 immediate（立即触发回调函数）、deep（深度监听）
+
+```js
+script>
+import {reactive, watch} from 'vue'
+export default {
+    setup() {    
+        const state = reactive({count: 0})
+
+        watch(() => state.count, (newValue, oldValue) => {
+          console.log(`原值为${oldValue}`)
+          console.log(`新值为${newValue}`)
+          /* 1秒后打印结果：
+                  原值为0
+                  新值为1
+          */
+        })
+
+        // 1秒后将state.count的值+1
+        setTimeout(() => {
+          state.count ++
+        }, 1000)
+    }
+}
+</script>
+```
+
+当同时监听多个值时：
+
+```js
+<script>
+import {reactive, watch} from 'vue'
+export default {
+    setup() {    
+        const state = reactive({ count: 0, name: 'zs' })
+
+         watch(
+            [() => state.count, () => state.name], 
+            ([newCount, newName], [oldvCount, oldvName]) => {
+              console.log(oldvCount) // 旧的 count 值
+              console.log(newCount) // 新的 count 值
+              console.log(oldName) // 旧的 name 值
+              console.log(newvName) // 新的 name 值
+            }
+          )
+
+          setTimeout(() => {
+            state.count ++
+            state.name = 'ls'
+          }, 1000)
+    }
+}
+</script>
+```
+
+因为 `watch` 方法的第一个参数我们已经指定了监听的对象，因此当组件初始化时，不会执行第二个参数中的回调函数，若我们想让其初始化时就先执行一遍，可以在第三个参数对象中设置 `immediate: true`
+
+```
+`watch` 方法默认是渐层的监听我们指定的数据，例如如果监听的数据有多层嵌套，深层的数据变化不会触发监听的回调，若我们想要其对深层数据也进行监听，可以在第三个参数对象中设置 `deep: true`
+```
+
+> **补充：** watch方法会返回一个stop方法，若想要停止监听，便可直接执行该stop函数
+
+`watchEffect`，它与 `watch` 的区别主要有以下几点：
+
+1. 不需要手动传入依赖
+2. 每次初始化时会执行一次回调函数来自动获取依赖
+3. 无法获取到原值，只能得到变化后的值
+
+## getCurrentInstance
+
+获取到当前组件的实例
+
+```vue
+<template>
+    <p>{{ num }}</p>
+</template>
+<script>
+import {ref, getCurrentInstance} from 'vue'
+export default {
+    setup() {    
+        const num = ref(3)
+        const instance = getCurrentInstance()
+        console.log(instance)
+
+        return {num}
+    }
+}
+</script>
+```
+
+![在这里插入图片描述](media/1460000038236429) 
+
+## useStore
+
+```tsx
+/ store 文件夹下的 index.js
+import Vuex from 'vuex'
+
+const store = Vuex.createStore({
+    state: {
+      name: '前端印象',
+      age: 22
+    },
+    mutations: {
+      ……
+    },
+    ……
+})
+
+// example.vue
+<script>
+// 从 vuex 中导入 useStore 方法
+import {useStore} from 'vuex'
+export default {
+    setup() {    
+        // 获取 vuex 实例
+        const store = useStore()
+
+        console.log(store)
+    }
+}
+</script>
+```
+
+## 获取标签元素
+
+```
+<template>
+  <div>
+    <div ref="el">div元素</div>
+  </div>
+</template>
+
+<script>
+import { ref, onMounted } from 'vue'
+export default {
+  setup() {
+    // 创建一个DOM引用，名称必须与元素的ref属性名相同
+    const el = ref(null)
+
+    // 在挂载后才能通过 el 获取到目标元素
+    onMounted(() => {
+      el.value.innerHTML = '内容被修改'
+    })
+
+    // 把创建的引用 return 出去
+    return {el}
+  }
+}
+</script>
+```
+
+获取元素的操作一共分为以下几个步骤：
+
+1. 先给目标元素的 `ref` 属性设置一个值，假设为 `el`
+2. 然后在 `setup` 函数中调用 `ref` 函数，值为 `null`，并赋值给变量 `el`，这里要注意，该变量名必须与我们给元素设置的 `ref` 属性名相同
+3. 把对元素的引用变量 `el` 返回（return）出去
+
+> **补充**：设置的元素引用变量只有在组件挂载后才能访问到，因此在挂载前对元素进行操作都是无效的
