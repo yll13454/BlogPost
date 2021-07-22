@@ -17,11 +17,11 @@ history参数
 
 history中可选三个函数参数，createMemoryHistory()，createWebHashHistory()，createWebHistory()
 
-![image-20210226131532461](D:\笔记\Vue 3.0 实战项目\media\image-20210226131532461.png) ![image-20210226131622400](D:\笔记\Vue 3.0 实战项目\media\image-20210226131622400.png) 
+![image-20210226131532461](media\image-20210226131532461.png) 
 
 # URL结构
 
-![image-20210226132547085](D:\笔记\Vue 3.0 实战项目\media\image-20210226132547085.png) 
+![image-20210226132547085](media\image-20210226132547085.png) 
 
 ### useRouter
 

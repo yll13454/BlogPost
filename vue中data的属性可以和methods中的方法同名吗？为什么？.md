@@ -1,0 +1,3 @@
+原理是可以重名，但是在vue中执行initData会抛出错误；
+initState中初始化opts的顺序是 props、methods、data、computed、watch所以data里的key会覆盖之前的key；
+

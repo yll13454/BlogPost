@@ -234,16 +234,6 @@ const { attrs } = useContext();
 
 
 
-
-
-
-
-
-
-
-
-
-
 # 引入组件报错
 
 ![image-20210429122234279](media/image-20210429122234279.png) 
@@ -258,5 +248,36 @@ import echarts from 'echarts'
 
 ```
 import * as echarts from 'echarts'
+```
+
+## watch
+
+### 单一源
+
+```js
+// 侦听一个getter
+const state = reactive({ count: 0 })
+watch(
+  () => state.count,
+  (count, prevCount) => {
+    /* ... */
+  }
+)
+
+// 直接侦听一个ref
+const count = ref(0)
+watch(count, (count, prevCount) => {
+  /* ... */
+})
+```
+
+### 侦听多个源
+
+侦听器还可以使用数组同时侦听多个源：
+
+```js
+watch([fooRef, barRef], ([foo, bar], [prevFoo, prevBar]) => {
+  /* ... */
+})
 ```
 

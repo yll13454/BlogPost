@@ -33,7 +33,7 @@ module.exports = {
 
 进入packages目录创建一个组件目录（HelloWorld），一个index文件（用来暴露所有的组件），然后在组件目录新建index（暴露出当前组件）文件与src组件源码。
 
-![img](D:\笔记\media\2019120411005637.jpg) 
+![img](media\2019120411005637.jpg) 
 
 在HelloWorld下面的index中引入组件。
 

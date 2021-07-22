@@ -28,7 +28,7 @@ declare var __VERSION__: string
 npm i @types/jquery中的jquery可以换成任意js库的名字, 当然前提是有人写了对应的声明文件发布到了npm.
 
 安装后, 我们可以在node_modules/@types/jquery中的看到声明文件, 这里我打开mise.d.ts文件:
-![9b410fa0a0d0af7afd768970f92d99f4.png](D:\笔记\Vue 3.0 实战项目\media\9b410fa0a0d0af7afd768970f92d99f4.png)
+![9b410fa0a0d0af7afd768970f92d99f4.png](media\9b410fa0a0d0af7afd768970f92d99f4.png)
 
 ## 声明文件对纯js项目有什么帮助?
 

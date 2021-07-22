@@ -1,4 +1,5 @@
-##### 用git pull来更新代码的时候，遇到了下面的问题：
+1. ##### 用git pull来更新代码的时候，遇到了下面的问题：
+
 
 ```css
 error: Your local changes to the following files would be overwritten by merge:
