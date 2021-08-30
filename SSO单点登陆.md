@@ -8,7 +8,7 @@ SSO 英文全称 Single Sign On，单点登录。
 
 #### 流程图
 
-![图片](D:\笔记\media\640) 
+![图片](media\640) 
 
 系统A和系统B：使用token认证登录。
 
@@ -18,7 +18,7 @@ SSO 认证中心：使用会话认证登录。
 
 #### 退出
 
-![图片](D:\笔记\media\640) 
+![图片](media\640) 
 
 #### Token 生成方式
 
@@ -50,7 +50,7 @@ CAS （Central Authentication Service）中心授权服务，本身是一个开�
 
 ### 1.同域 SSO
 
-![img](D:\笔记\media\d5c406051e343391aa970e8960229356) 
+![img](media\d5c406051e343391aa970e8960229356) 
 
 用户访问产品 a，向 后台服务器发送登录请求。
 

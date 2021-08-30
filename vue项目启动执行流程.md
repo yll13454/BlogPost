@@ -44,7 +44,7 @@
 
 ### 2. webpack.dev.conf.js
 
-![img](D:\笔记\media\616891-20180817144307679-525629868.png) 
+![img](media\616891-20180817144307679-525629868.png) 
 
 加载 build/webpack.dev.conf.js 配置并启动 webpack-dev-server 。
 
@@ -52,7 +52,7 @@
 
  webpack.dev.conf.js 中引入了很多模块的内容，其中就包括 config 目录下服务器环境的配置文件。
 
-![img](D:\笔记\media\616891-20180817144812448-1629632495.png) 
+![img](media\616891-20180817144812448-1629632495.png) 
 
 
 
@@ -60,4 +60,4 @@
 
 可以看到，在 index.js 文件中包含服务器 host 和 port 以及入口文件的相关配置，默认启动端口是8080，这里可以进行修改。
 
- ![img](D:\笔记\media\ff202cf3d88f16821e2cb9f7bad8646bb72.png)
+ ![img](media\ff202cf3d88f16821e2cb9f7bad8646bb72.png)

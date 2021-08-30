@@ -39,7 +39,7 @@
     console.log(foo.bar, buz); // => "lorem ipsum", ""
 ```
 
-![img](D:\笔记\Vue 3.0 实战项目\media\171056493a9e69ae) 
+![img](media\171056493a9e69ae) 
 
 可以看到，`toRefs` 是在原有 `Proxy` 对象的基础上，返回了一个普通的带有 `get` 和 `set` 的对象。这样就解决了 `Proxy` 对象遇到解构和展开运算符后，失去引用的情况的问题。
 

@@ -31,11 +31,11 @@ history中可选三个函数参数，createMemoryHistory()，createWebHashHistor
 
 方法一
 
-![image-20210226145756660](D:\笔记\Vue 3.0 实战项目\media\image-20210226145756660.png) 
+![image-20210226145756660](media\image-20210226145756660.png) 
 
 方法二
 
-![image-20210226145830739](D:\笔记\Vue 3.0 实战项目\media\image-20210226145830739.png) 
+![image-20210226145830739](media\image-20210226145830739.png) 
 
 useRouter//定义路由的行为
 
@@ -50,17 +50,17 @@ setup(){
 }
 ```
 
-![image-20210226153334275](D:\笔记\Vue 3.0 实战项目\media\image-20210226153334275.png) 
+![image-20210226153334275](media\image-20210226153334275.png) 
 
-![image-20210226160549331](D:\笔记\Vue 3.0 实战项目\media\image-20210226160549331.png)
+![image-20210226160549331](media\image-20210226160549331.png)
 
 ## vuex状态管理工具
 
-![image-20210226161716852](D:\笔记\Vue 3.0 实战项目\media\image-20210226161716852.png)
+![image-20210226161716852](media\image-20210226161716852.png)
 
 #### 流程
 
-![image-20210226162355643](D:\笔记\Vue 3.0 实战项目\media\image-20210226162355643.png)
+![image-20210226162355643](media\image-20210226162355643.png)
 
 vuex解决俩大问题，
 
@@ -98,7 +98,7 @@ store.commit('add')//调用mutations中方法
 
 createStore接收对象作为参数
 
-![image-20210302132439056](D:\笔记\Vue 3.0 实战项目\media\image-20210302132439056.png) 
+![image-20210302132439056](media\image-20210302132439056.png) 
 
 createStore接收一个泛型，返回一个包裹这个类型的state ，
 
@@ -185,6 +185,6 @@ router.beforeEach((to,form,next)=>{})
 
 可以根据元信息来判断路由是否跳转
 
-![image-20210303132839637](D:\笔记\Vue 3.0 实战项目\media\image-20210303132839637.png) 
+![image-20210303132839637](media\image-20210303132839637.png) 
 
-![image-20210303132904370](D:\笔记\Vue 3.0 实战项目\media\image-20210303132904370.png) 
+![image-20210303132904370](media\image-20210303132904370.png) 
