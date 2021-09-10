@@ -174,3 +174,311 @@ Object.getOwnPropertyDescriptors(obj)
 Promise.resolve().then().catch(e => e).finally();
 ```
 
+# 剩余运算符(rest)
+
+**Rest 参数必须放到参数列表的末尾**
+
+```
+function myFunction(x, y, z) { }
+var args = [0, 1, 2];
+myFunction(...args);
+```
+
+**与argument的区别**
+
+ `arguments` 的特殊的类数组对象，该对象按参数索引包含所有参数。
+
+```js
+function showName() {
+  alert( arguments.length );
+  alert( arguments[0] );
+  alert( arguments[1] );
+
+  // 它是可遍历的
+  // for(let arg of arguments) alert(arg);
+}
+
+// 依次显示：2，Julius，Caesar
+showName("Julius", "Caesar");
+
+// 依次显示：1，Ilya，undefined（没有第二个参数）
+showName("Ilya");
+```
+
+- `arguments` 是一个类数组，也是可迭代对象，但它终究不是数组。它不支持数组方法，因此我们不能调用 `arguments.map(...)` 等方法。
+
+- 它始终包含所有参数，我们不能像使用 rest 参数那样只截取入参的一部分。
+
+- **箭头函数是没有** `"arguments"`
+
+##  扩展运算符(spread)
+
+[ES6中扩展运算符(spread)和剩余运算符(rest)详解](https://www.jianshu.com/p/3928e0571874)
+
+```jsx
+/******************扩展运算符(spread)********************/
+
+     //demo 1  传递数据代替多个字符串的形式
+     function  test(a,b,c){
+         console.log(a);
+         console.log(b);
+         console.log(c);
+     }
+
+     var arr = [1, 2, 3];
+     test(...arr);
+    
+
+     //demo2 将一个数组插入到另一个数据中
+     var arr1 = [1, 2, 3,4];
+     var arr2 = [...arr1, 4, 5, 6];
+     console.log(arr2);
+
+
+     //demo3  字符串转数据
+     var str='loycoder';
+     var arr3= [...str];
+     console.log(arr3);
+```
+
+
+
+```jsx
+ /******************剩余运算符(rest)********************/
+
+  //demo4  当函数参数个数不确定时，用 rest运算符
+    function rest01(...arr) {
+        for (let item of arr) {
+            console.log(item);
+        }
+    }
+    rest01(1, 3, 5);
+
+    //demo5 当函数参数个数不确定时的第二种情况
+    function rest02(item, ...arr) {
+        console.log(item);
+        console.log(arr);
+    }
+    rest02(1, 2, 34);
+
+    //demo6 rest运算符配合 解构使用：
+    var [a,...temp]=[1, 2, 4];
+    console.log(a);
+    console.log(temp);
+```
+
+最后总结：
+
+###### 扩展运算符用三个点号表示，功能是把数组或类数组对象展开成一系列用逗号隔开的值
+
+###### rest运算符也是三个点号，不过其功能与扩展运算符恰好相反，把逗号隔开的值序列组合成一个数组
+
+------
+
+###### 当三个点(...)在等号左边，或者放在形参上。为 rest 运算符
+
+###### 当三个在等号右边，或者放在实参上，是 spread运算符
+
+或者说：
+
+###### 放在被赋值一方是rest  运算符。放在赋值一方式 spread运算符。
+
+# flat()
+
+扁平化
+
+```
+[1, 2, [3, 4]].flat()
+// [1, 2, 3, 4]
+```
+
+flat()默认只会“拉平”一层，如果想要“拉平”多层的嵌套数组，可以将flat()方法的参数写成一个整数，表示想要拉平的层数，默认为1。
+
+```
+[1, 2, [3, [4, 5]]].flat()
+// [1, 2, 3, [4, 5]]
+[1, 2, [3, [4, 5]]].flat(2)
+// [1, 2, 3, 4, 5]
+1234
+```
+
+上面代码中，flat()的参数为2，表示要拉平两层的嵌套数组。
+
+如果不管有多少层嵌套，都要转成一维数组，可以用Infinity关键字作为参数。
+
+```
+[1, [2, [3]]].flat(Infinity)
+// [1, 2, 3]
+12
+```
+
+如果原数组有空位，flat()方法会跳过空位。
+
+```
+[1, 2, , 4, 5].flat()
+// [1, 2, 4, 5]
+```
+
+## flatMap()
+
+flatMap()方法对原数组的每个成员执行一个函数，相当于执行Array.prototype.map(),然后对返回值组成的数组执行flat()方法。该方法返回一个新数组，不改变原数组。
+
+```
+// 相当于 [[2, 4], [3, 6], [4, 8]].flat()
+[2, 3, 4].flatMap((x) => [x, x * 2])
+// [2, 4, 3, 6, 4, 8]
+```
+
+flatMap()只能展开一层数组。
+
+## String.trimStart()和String.trimEnd()
+
+去除字符串首尾空白字符
+
+### 3. String.prototype.matchAll
+
+> matchAll（）为所有匹配的匹配对象返回一个迭代器
+
+```bash
+const raw_arr = 'test1  test2  test3'.matchAll((/t(e)(st(\d?))/g));
+const arr = [...raw_arr];
+```
+
+![img](media/1460000039272646.png)
+
+### 4. Symbol.prototype.description
+
+> 只读属性，回 Symbol 对象的可选描述的字符串。
+
+```bash
+Symbol('description').description; // 'description'
+```
+
+### 5. Object.fromEntries()
+
+> 返回一个给定对象自身可枚举属性的键值对数组
+
+```bash
+// 通过 Object.fromEntries， 可以将 Map 转化为 Object:
+const map = new Map([ ['foo', 'bar'], ['baz', 42] ]);
+console.log(Object.fromEntries(map)); // { foo: "bar", baz: 42 }
+```
+
+### Nullish coalescing Operator(空值处理)
+
+表达式在 ?? 的左侧 运算符求值为undefined或null，返回其右侧。
+
+```bash
+let user = {
+    u1: 0,
+    u2: false,
+    u3: null,
+    u4: undefined
+    u5: '',
+}
+let u2 = user.u2 ?? '用户2'  // false
+let u3 = user.u3 ?? '用户3'  // 用户3
+let u4 = user.u4 ?? '用户4'  // 用户4
+let u5 = user.u5 ?? '用户5'  // ''
+```
+
+###  Optional chaining（可选链）
+
+?.用户检测不确定的中间节点
+
+```bash
+let user = {}
+let u1 = user.childer.name // TypeError: Cannot read property 'name' of undefined
+let u1 = user.childer?.name // undefined
+```
+
+### globalThis
+
+- 浏览器：window
+- worker：self
+- node：global
+
+### replaceAll
+
+> 返回一个全新的字符串，所有符合匹配规则的字符都将被替换掉
+
+```bash
+const str = 'hello world';
+str.replaceAll('l', ''); // "heo word"
+```
+
+### Promise.any
+
+> Promise.any() 接收一个Promise可迭代对象，只要其中的一个 promise 成功，就返回那个已经成功的 promise 。如果可迭代对象中没有一个 promise 成功（即所有的 promises 都失败/拒绝），就返回一个失败的 promise
+
+### 逻辑运算符和赋值表达式
+
+> 逻辑运算符和赋值表达式，新特性结合了逻辑运算符（&&，||，??）和赋值表达式而JavaScript已存在的 复合赋值运算符有：
+
+## ??=可用来补充/初始化缺失的属性
+
+```javascript
+const pages = [
+  {
+  	title:'主会场',
+    path:'/'
+  },
+  {
+    path:'/other'
+  },
+  ...
+]
+  
+for (const page of pages){
+	page.title ??= '默认标题'
+}
+console.table(pages)
+//(index)  title       		path
+//0        "主会场"   	  "/"
+//1        "默认标题"  	 "/other"
+```
+
+### 小结：
+
+- &&=：当LHS值存在时，将RHS变量赋值给LHS
+- ||=：当LHS值不存在时，将RHS变量赋值给LHS
+- ??= ：当LHS值为null或者undefined时，将RHS变量赋值给LHS
+
+
+作者：前端Sneaker
+链接：https://juejin.cn/post/6890652568507121677
+来源：掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+### 数字分隔符
+
+> 数字分隔符，可以在数字之间创建可视化分隔符，通过_下划线来分割数字，使数字更具可读性
+
+```bash
+const money = 1_000_000_000;
+//等价于
+const money = 1000000000;
+
+1_000_000_000 === 1000000000; // true
+```
+
+#### import
+
+可以按需获取的动态 import
+
+```
+const util = './util.js'
+import(util).then((module) => {
+    module.fun1();
+    module.fun2();
+});
+
+(async () => {
+  const util = './util.js';
+  const module = await import(util)
+  const fun1 = module.fun1(1);
+  const fun2 = module.fun1(2);
+})();
+```
+
+

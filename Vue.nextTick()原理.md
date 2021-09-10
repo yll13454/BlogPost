@@ -18,3 +18,27 @@
 
 调用过程是要先给它绑定回调，得到MO实例，这个回调会在MO实例监听到变动时触发。这里MO的回调是放在`microtask`中执行的。
 
+
+
+![未命名.png](media/5ec3a2382fe04183bbc20f98ab2784b6tplv-k3u1fbpfcp-watermark.awebp)
+
+[Vue源码——nextTick实现原理](https://juejin.cn/post/6891309786290192391#heading-6)
+
+[你真的理解$nextTick么](https://juejin.cn/post/6844903843197616136)
+
+
+
+# Vue3源码解析：nextTick
+
+#### nextTick
+
+`nextTick`非常简单，创建一个微任务。在当前宏任务结束后，执行fn。
+
+```
+function nextTick(fn?: () => void): Promise<void> {
+  return fn ? p.then(fn) : p
+}
+```
+
+`setImmediate` 只兼容 IE10 以上浏览器，其他浏览器均不兼容。其是个宏任务 (macro task)，消耗的资源比较小
+
