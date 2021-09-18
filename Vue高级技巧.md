@@ -97,7 +97,7 @@ export default {
 </script>
 ```
 
-![img](https://upload-images.jianshu.io/upload_images/7579449-ba2672a9e6517474.png?imageMogr2/auto-orient/strip|imageView2/2/w/799/format/webp)
+![img](media/webp.webp)
 
 ## 使用`require.context`实现前端工程自动化
 

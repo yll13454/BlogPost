@@ -9,3 +9,4 @@ nuxt的asyncData调用会出现以下跨域报错，但是刷新后就好了。�
 nuxt[官方英文文档](https://link.segmentfault.com/?url=https%3A%2F%2Fnuxtjs.org%2Fapi%2F)有说明，中文文档没有：
 
 > `asyncData` is called every time before loading the page component and is only available for such. It will be called server-side once (on the first request to the Nuxt app) and client-side when navigating to further routes.
+
