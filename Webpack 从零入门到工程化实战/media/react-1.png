@@ -1,0 +1,1 @@
+<body><form action="/404" method="post" style="display:none"> <input type="text" name="back_url" value="www.imooc.com/read/29/article/img/react-1.png" /><br /><input type="submit"  id="notfoundform"><br /></form></body><br /><script>(function (){document.getElementById("notfoundform").click();})()</script>

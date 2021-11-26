@@ -74,3 +74,11 @@ Vue 在更新 DOM 时是异步执行的。只要侦听到数据变化，Vue 将�
 
 https://cloud.tencent.com/developer/article/1633546
 
+# nextTick 函数的实现原理
+
+简单说说面试的时候可以拿去吹牛逼。写太多怕大家也不喜欢看。
+
+1. 先定义了一个callbacks 存放所有的nextTick里的回调函数
+2. 然后判断一下当前的浏览器内核是否支持 Promise，如果支持，就用Promise来触发回调函数
+3. 如果不支持Promise再看看是否支持MutationObserver，是一个可以监听DOM结构变化的接口，观察文本节点发生变化时，触发执行所有回调函数。
+4. 如果以上都不支持就只能用setTimeout来完成异步执行了。

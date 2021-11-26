@@ -128,3 +128,27 @@ async function asyncFn7 () {
 链接：https://juejin.cn/post/6844903773911908359
 来源：掘金
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+# [async/await 优雅的错误处理方法](https://juejin.cn/post/6844903767129718791)
+
+```js
+// 抽离成公共方法
+    const awaitWrap = (promise) => {
+        return promise
+            .then(data => [null, data])
+            .catch(err => [err, null])
+    }
+```
+
+```tsx
+function awaitWrap<T, U = any>(promise: Promise<T>): Promise<[U | null, T | null]> {
+    return promise
+        .then<[null, T]>((data: T) => [null, data])
+        .catch<[U, null]>(err => [err, null])
+}
+```
+
+#### 使用
+
+
+

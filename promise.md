@@ -225,3 +225,214 @@ function loadImageAsync(url) {
 }
 ```
 
+## Promise.any()
+
+ES2021 引入了Promise.any()方法。该方法接受一组 Promise 实例作为参数，包装成一个新的 Promise 实例返回。只要参数实例有一个变成fulfilled状态，包装实例就会变成fulfilled状态；如果所有参数实例都变成rejected状态，包装实例就会变成rejected状态。
+
+`Promise.any()`跟`Promise.race()`方法很像，只有一点不同，就是不会因为某个 Promise 变成`rejected`状态而结束。
+
+```js
+var resolved = Promise.resolve(42);
+var rejected = Promise.reject(-1);
+var alsoRejected = Promise.reject(Infinity);
+
+Promise.any([resolved, rejected, alsoRejected]).then(function (result) {
+  console.log(result); // 42
+});
+
+Promise.any([rejected, alsoRejected]).catch(function (results) {
+  console.log(results); // [-1, Infinity]
+});
+```
+
+## Promise之微任务宏任务
+
+setTimeout 和 Promise 并不在一个异步队列中，前者属于宏任务（MacroTask），而后者属于微任务（MicroTask）
+
+```js
+setTimeout(_ => console.log(4))//异步宏任务
+new Promise(resolve => {
+  console.log(1)//Promise在实例化的过程中所执行的代码都是同步进行的
+  resolve()
+}).then(_ => {
+  console.log(3)//then则是具有代表性的微任务
+})
+
+console.log(2)//同步
+```
+
+
+
+```js
+// 这是一个同步任务
+console.log('1')            --------> 直接被执行
+                                      目前打印结果为：1
+
+// 这是一个宏任务
+setTimeout(function () {    --------> 整体的setTimeout被放进宏任务列表
+  console.log('4')                    目前宏任务列表记为【c4】
+});
+
+new Promise(function (resolve) {
+  // 这里是同步任务
+  console.log('2');         --------> 直接被执行
+  resolve();                          目前打印结果：1，2
+  // then是一个微任务
+}).then(function () {       --------> 整体的then[包含里面的setTimeout]被放进微任务列表
+  console.log('3')                    目前微任务列表记为【c3】，目前打印结果 1，2，3
+  setTimeout(function () {
+    console.log('5')        -------->微任务里面如果有宏任务，那么会将宏任务放进任务列表
+                                      目前宏任务列表记为【c4，c5】
+  });
+});
+```
+
+## async函数
+
+`async` 函数是什么？
+
+1. async/await是写异步代码的新方式，以前的方法有回调函数和Promise。
+2. async/await是基于Promise实现的，它不能用于普通的回调函数。
+3. async/await使得异步代码看起来像同步代码，这正是它的魔力所在。
+4. async/await解决了Promise可能出现的嵌套地狱。
+
+**async用于申明function异步，await用于等待一个异步方法执行完成**
+
+**1、正常情况下，await命令后面是一个Promise对象。如果不是，会被转成一个立即resolve的Promise对象。**
+
+**2、await命令后面的 Promise 对象如果变为reject状态，则reject的参数会被.catch方法的回调函数接收到**
+
+```js
+//下面代码中，await语句前面没有return，但是reject方法的参数依然传入了catch方法的回调函数。这里如果在await前面加上return，效果是一样的。
+async function f() {
+  await Promise.reject('出错了');
+}
+f()
+.then(v => 
+    console.log(v)
+)
+.catch(e => 
+    console.log(e)
+)  //出错了
+```
+
+**3、Promise 对象的状态变化：async函数返回的 Promise 对象，必须等到内部所有await命令后面的 Promise 对象执行完，才会发生状态改变，除非遇到return语句或者抛出错误。也就是说，只有async函数内部的异步操作执行完，才会执行then方法指定的回调函数。**
+
+**只要一个await语句后面的 Promise 变为reject，那么整个async函数都会中断执行**
+
+```js
+async function f() {  
+    await Promise.reject('出错了');
+    await Promise.resolve('hello world');   //不会执行}  
+     //Promise {<rejected>: "出错了"}
+```
+
+**4、前一个异步操作失败，也不要中断后面的异步操作。这时可以将第一个await放在try...catch结构里面，这样不管这个异步操作是否成功，第二个await都会执行**
+
+```js
+ async function f() {
+  try {
+      await Promise.reject('出错了');
+  } catch(e) {
+  }
+  return await Promise.resolve('hello world');
+}
+f()
+.then(v => 
+    console.log(v)
+)  //hello world
+ 
+ 
+//另一种方法：await后面的 Promise 对象再跟一个catch方法，处理前面可能出现的错误
+async function f() {
+    await Promise.reject('出错了')
+          .catch(e => 
+              console.log(e)
+          );  //出错了
+    return await Promise.resolve('hello world');
+}
+f()
+.then(v => 
+    console.log(v)
+)  //hello world
+```
+
+**5、如果await后面的异步操作出错，那么等同于async函数返回的 Promise 对象被reject**
+
+```js
+async function f() {
+    await new Promise(function (resolve, reject) {
+        throw new Error('出错了');
+    });
+}
+f()
+.then(v => 
+    console.log(v)
+)
+.catch(e => 
+    console.log(e)
+)  //Error：出错了
+```
+
+**6、多个await命令后面的异步操作，如果不存在继发关系，最好让它们同时触发**
+
+```tsx
+let foo = await getFoo();
+let bar = await getBar();
+//上面代码中，getFoo和getBar是两个独立的异步操作（即互不依赖），被写成继发关系。这样比较耗时，因为只有getFoo完成以后，才会执行getBar，完全可以让它们同时触发改进
+let [foo, bar] = await Promise.all([getFoo(), getBar()]);
+//上面写法，getFoo和getBar都是同时触发，这样就会缩短程序的执行时间 
+```
+
+当try...catch包裹在promise对象中的时候，使用.catch可以捕获到所有错误，当try...catch包裹在Promise对象外的时候，catch方法能够捕获全部，而.catch不能能捕获到reject之外的异常。
+
+> 其实说白了就是try/catch捕获异步方法的话，它只会捕获第一次异常，其它的异步所抛出的异常它就捕获不到了。最好的办法就是在async/await中用.catch去捕获对应异步函数reject抛出的错误，然后用try/catch包裹整个代码执行逻辑，这样的话try/catch就可以捕获所有的异常了
+
+```js
+const fn = (type, msg) => {
+    return new Promise((resolve, reject) => {
+        if (type) {
+            resolve(`success:${msg}`)
+        } else {
+            reject(`fail:${msg}`)
+        }
+    })
+}
+// 捕获异步中的错误1
+const asyncFn = async () => {
+    try {
+        let result1 = await fn(false, 'hello')
+        console.log('中间内容输出')
+        let result2 = await fn(false, 'world')
+        console.log('result1' + result1)
+        console.log('result2' + result2)
+    } catch (error) {
+        console.log('catch:' + error)
+    }
+}
+// 捕获异步中的错误1
+//catch:fail:hello
+
+const asyncFn = async () => {
+    try {
+        await fn(false, 'hello').then(() => {}).catch(err => {
+            console.log('result1:' + err)
+        })
+        console.log('中间内容输出')
+        await fn(false, 'world').then(() => { }).catch(err => {
+            console.log('result2:' + err)
+        })
+    } catch (error) {
+        console.log('catch:' + error)
+    }
+}
+
+asyncFn();
+// 捕获异步中的错误2
+//result1:fail:hello
+//中间内容输出
+//result2:fail:world
+```
+
+### **try catch中如果有多个await时，多个错误，catch只能补获第一个错误。**
+
