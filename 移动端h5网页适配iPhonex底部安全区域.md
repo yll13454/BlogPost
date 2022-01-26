@@ -18,7 +18,7 @@ iOS11 新增特性，苹果公司为了适配 iPhoneX 对现有 viewport meta �
 
 contain和cover具体区别如下图：
 
-![img](media/format,png.png)
+![img](/media/format,png.png)
 
 > 注意：网页默认不添加扩展的表现是 viewport-fit=contain，需要适配 iPhoneX 必须设置 viewport-fit=cover，这是适配的关键步骤。
 
